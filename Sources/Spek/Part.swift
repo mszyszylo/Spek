@@ -5,7 +5,7 @@
 //  Copyright © 2019 Khoa Pham. All rights reserved.
 //
 
-@_functionBuilder
+@resultBuilder
 public struct PartBuilder {
     public static func buildBlock(_ parts: Part...) -> [Part] {
         parts
@@ -13,58 +13,58 @@ public struct PartBuilder {
 }
 
 public protocol Part {
-    func run() throws
+    func run() async throws
 }
 
 public extension Part {
-    func run() throws {}
+    func run() async throws {}
 }
 
 public struct BeforeAll: Part {
-    let closure: () throws -> Void
+    let closure: () async throws -> Void
 
-    public init(closure: @escaping () throws -> Void) {
+    public init(closure: @escaping () async throws -> Void) {
         self.closure = closure
     }
 
-    public func run() throws {
-        try closure()
+    public func run() async throws {
+        try await closure()
     }
 }
 
 public struct AfterAll: Part {
-    let closure: () throws -> Void
+    let closure: () async throws -> Void
 
-    public init(closure: @escaping () throws -> Void) {
+    public init(closure: @escaping () async throws -> Void) {
         self.closure = closure
     }
 
-    public func run() throws {
-        try closure()
+    public func run() async throws {
+        try await closure()
     }
 }
 
 public struct BeforeEach: Part {
-    let closure: () throws -> Void
+    let closure: () async throws -> Void
 
-    public init(closure: @escaping () throws -> Void) {
+    public init(closure: @escaping () async throws -> Void) {
         self.closure = closure
     }
 
-    public func run() throws {
-        try closure()
+    public func run() async throws {
+        try await closure()
     }
 }
 
 public struct AfterEach: Part {
-    let closure: () throws -> Void
+    let closure: () async throws -> Void
 
-    public init(closure: @escaping () throws -> Void) {
+    public init(closure: @escaping () async throws -> Void) {
         self.closure = closure
     }
 
-    public func run() throws {
-        try closure()
+    public func run() async throws {
+        try await closure()
     }
 }
 
@@ -85,37 +85,44 @@ public struct Describe: Part {
         self.init(name, parts: [builder()])
     }
 
-    public func run() throws {
-        try parts.filter({ $0 is BeforeAll }).forEach({ try $0.run() })
+    public func run() async throws {
+        for part in parts where part is BeforeAll {
+            try await part.run()
+        }
 
-        try parts.forEach { part in
-            try parts.filter({ $0 is BeforeEach }).forEach({ try $0.run() })
+        for part in parts {
+            for part in parts where part is BeforeEach {
+                try await part.run()
+            }
 
             switch part {
             case is It, is Describe, is Sub:
-                try part.run()
+                try await part.run()
             default:
                 break
             }
 
-            try parts.filter({ $0 is AfterEach }).forEach({ try $0.run() })
+            for part in parts where part is AfterEach {
+                try await part.run()
+            }
         }
-
-        try parts.filter({ $0 is AfterAll }).forEach({ try $0.run() })
+        for part in parts where part is AfterAll {
+            try await part.run()
+        }
     }
 }
 
 public struct It: Part {
     let name: String
-    let closure: () throws -> Void
+    let closure: () async throws -> Void
 
-    public init(_ name: String, closure: @escaping () throws -> Void) {
+    public init(_ name: String, closure: @escaping () async throws -> Void) {
         self.name = name
         self.closure = closure
     }
 
-    public func run() throws {
-        try closure()
+    public func run() async throws {
+        try await closure()
     }
 }
 
@@ -125,8 +132,8 @@ public struct Sub: Part {
         self.closure = closure
     }
 
-    public func run() throws {
-        try closure().run()
+    public func run() async throws {
+        try await closure().run()
     }
 }
 

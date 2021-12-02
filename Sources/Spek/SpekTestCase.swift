@@ -154,13 +154,21 @@ open class SpekTestCase: SpekHelperTestCase {
 #endif
 
 private extension Describe {
-    func runBefore() throws {
-        try parts.filter({ $0 is BeforeAll }).forEach({ try $0.run() })
-        try parts.filter({ $0 is BeforeEach }).forEach({ try $0.run() })
+    func runBefore() async throws {
+        for part in parts where part is BeforeAll {
+            try await part.run()
+        }
+        for part in parts where part is BeforeEach {
+            try await part.run()
+        }
     }
 
-    func runAfter() throws {
-        try parts.filter({ $0 is AfterEach }).forEach({ try $0.run() })
-        try parts.filter({ $0 is AfterAll }).forEach({ try $0.run() })
+    func runAfter() async throws {
+        for part in parts where part is AfterEach {
+            try await part.run()
+        }
+        for part in parts where part is AfterAll {
+            try await part.run()
+        }
     }
 }

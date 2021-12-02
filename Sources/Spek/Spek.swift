@@ -8,18 +8,18 @@
 import Foundation
 import XCTest
 
-public func spec(@PartBuilder builder: () -> [Part]) {
-    run(parts: builder())
+public func spec(@PartBuilder builder: () -> [Part]) async {
+    await run(parts: builder())
 }
 
-public func spec(@PartBuilder builder: () -> Part) {
-    run(parts: [builder()])
+public func spec(@PartBuilder builder: () -> Part) async {
+    await run(parts: [builder()])
 }
 
-private func run(parts: [Part]) {
+private func run(parts: [Part]) async {
     do {
-        try parts.forEach {
-            try $0.run()
+        for part in parts {
+            try await part.run()
         }
     } catch {
         XCTFail(error.localizedDescription)

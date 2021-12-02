@@ -2,10 +2,10 @@ import XCTest
 @testable import Spek
 
 final class SpekTests: XCTestCase {
-    func testExample() {
+    func testExample() async {
         var left = 0
         var right = 0
-        spec {
+        await spec {
             Describe("math") {
                 BeforeEach {
                     left = 2

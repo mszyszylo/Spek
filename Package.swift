@@ -1,13 +1,11 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.5
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "Spek",
-    platforms: [
-        .macOS(.v10_10), .iOS(.v8), .tvOS(.v9)
-    ],
+    platforms: [.iOS(.v15)],
     products: [
         .library(
             name: "Spek",
@@ -16,22 +14,10 @@ let package = Package(
     ],
     dependencies: [],
     targets: {
-        var mutableTargets: [Target] = [
-            .testTarget(name: "SpekTests", dependencies: ["Spek"])
+        [
+            .testTarget(name: "SpekTests", dependencies: ["Spek"]),
+            .target(name: "Spek", dependencies: [])
         ]
-
-        #if os(macOS) && canImport(ObjectiveC)
-            mutableTargets.append(contentsOf: [
-                .target(name: "SpekHelper", dependencies: []),
-                .target(name: "Spek", dependencies: ["SpekHelper"])
-            ])
-        #else
-            mutableTargets.append(
-                .target(name: "Spek", dependencies: [])
-            )
-        #endif
-
-        return mutableTargets
     }(),
     swiftLanguageVersions: [.v5]
 )
