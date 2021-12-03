@@ -8,15 +8,15 @@
 import Foundation
 import XCTest
 
-public func spec(@PartBuilder builder: () -> [Part]) async {
+public func spec(@PartBuilder builder: () -> [PartAsync]) async {
     await run(parts: builder())
 }
 
-public func spec(@PartBuilder builder: () -> Part) async {
+public func spec(@PartBuilder builder: () -> PartAsync) async {
     await run(parts: [builder()])
 }
 
-private func run(parts: [Part]) async {
+private func run(parts: [PartAsync]) async {
     do {
         for part in parts {
             try await part.run()

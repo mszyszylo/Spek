@@ -8,7 +8,7 @@
 import XCTest
 import Spek
 
-class GenerateTestCaseTests: SpekTestCase {
+class GenerateTestCaseTests: SpekTestCaseSync {
     override class func describe() -> Describe {
         var left = 0
         var right = 0
