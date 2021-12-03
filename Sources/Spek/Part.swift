@@ -7,6 +7,7 @@
 
 @resultBuilder
 public struct PartBuilder {
+    @available(iOS 15.0, *)
     public static func buildBlock(_ parts: PartAsync...) -> [PartAsync] {
         parts
     }

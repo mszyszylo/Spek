@@ -1,6 +1,7 @@
 import XCTest
 @testable import Spek
 
+@available(iOS 15.0, *)
 final class SpekTests: XCTestCase {
     func testExample() async {
         var left = 0

@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Spek",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v12)],
     products: [
         .library(
             name: "Spek",

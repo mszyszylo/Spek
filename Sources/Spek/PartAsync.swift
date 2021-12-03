@@ -5,14 +5,17 @@
 //  Copyright © 2019 Khoa Pham. All rights reserved.
 //
 
+@available(iOS 15.0, *)
 public protocol PartAsync {
     func run() async throws
 }
 
+@available(iOS 15.0, *)
 public extension PartAsync {
     func run() async throws {}
 }
 
+@available(iOS 15.0, *)
 public struct BeforeAllAsync: PartAsync {
     let closure: () async throws -> Void
 
@@ -25,6 +28,7 @@ public struct BeforeAllAsync: PartAsync {
     }
 }
 
+@available(iOS 15.0, *)
 public struct AfterAllAsync: PartAsync {
     let closure: () async throws -> Void
 
@@ -37,6 +41,7 @@ public struct AfterAllAsync: PartAsync {
     }
 }
 
+@available(iOS 15.0, *)
 public struct BeforeEachAsync: PartAsync {
     let closure: () async throws -> Void
 
@@ -49,6 +54,7 @@ public struct BeforeEachAsync: PartAsync {
     }
 }
 
+@available(iOS 15.0, *)
 public struct AfterEachAsync: PartAsync {
     let closure: () async throws -> Void
 
@@ -61,6 +67,7 @@ public struct AfterEachAsync: PartAsync {
     }
 }
 
+@available(iOS 15.0, *)
 public struct DescribeAsync: PartAsync {
     let name: String
     let parts: [PartAsync]
@@ -105,6 +112,7 @@ public struct DescribeAsync: PartAsync {
     }
 }
 
+@available(iOS 15.0, *)
 public struct ItAsync: PartAsync {
     let name: String
     let closure: () async throws -> Void
@@ -119,6 +127,7 @@ public struct ItAsync: PartAsync {
     }
 }
 
+@available(iOS 15.0, *)
 public struct SubAsync: PartAsync {
     let closure: () -> DescribeAsync
     public init(closure: @escaping () -> DescribeAsync) {
@@ -130,4 +139,5 @@ public struct SubAsync: PartAsync {
     }
 }
 
+@available(iOS 15.0, *)
 public typealias ContextAsync = DescribeAsync
