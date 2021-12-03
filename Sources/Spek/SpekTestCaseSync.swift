@@ -15,6 +15,8 @@ import SpekHelper
 public typealias SpekHelperTestCase = XCTestCase
 #endif
 
+public typealias SpekTestCase = SpekTestCaseSync
+
 open class SpekTestCaseSync: SpekHelperTestCase {
     open class func describe() -> Describe {
         Describe("empty")
