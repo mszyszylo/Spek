@@ -16,7 +16,8 @@ let package = Package(
     targets: {
         [
             .testTarget(name: "SpekTests", dependencies: ["Spek"]),
-            .target(name: "Spek", dependencies: [])
+            .target(name: "SpekHelper", dependencies: []),
+            .target(name: "Spek", dependencies: ["SpekHelper"])
         ]
     }(),
     swiftLanguageVersions: [.v5]
