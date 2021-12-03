@@ -6,34 +6,34 @@ final class SpekTests: XCTestCase {
         var left = 0
         var right = 0
         await spec {
-            Describe("math") {
-                BeforeEach {
+            DescribeAsync("math") {
+                BeforeEachAsync {
                     left = 2
                 }
 
-                Describe("basic") {
-                    BeforeEach {
+                DescribeAsync("basic") {
+                    BeforeEachAsync {
                         right = 3
                     }
 
-                    AfterEach {
+                    AfterEachAsync {
 
                     }
 
-                    Sub {
+                    SubAsync {
                         let another = 4
-                        return Describe("3 operands") {
-                            It("adds with another") {
+                        return DescribeAsync("3 operands") {
+                            ItAsync("adds with another") {
                                 XCTAssertEqual(left + right + another, 9)
                             }
                         }
                     }
 
-                    It("adds correctly") {
+                    ItAsync("adds correctly") {
                         XCTAssertEqual(left + right, 5)
                     }
 
-                    It("multiplies correctly") {
+                    ItAsync("multiplies correctly") {
                         XCTAssertEqual(left * right, 6)
                     }
                 }

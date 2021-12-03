@@ -108,7 +108,7 @@ Describe("math") {
 
 By default, `spec` method runs the test directly, to generate test cases, you need to override `makeDescribe`.
 
-Subclass `SpekTestCase` and override `makeDescribe` method, Spek will convert your `Describe` descriptions and generate `XCTestCase` methods. It generates test methods for nested `Describe` and `Sub` too.
+Subclass `SpekTestCaseSync` and override `makeDescribe` method, Spek will convert your `Describe` descriptions and generate `XCTestCase` methods. It generates test methods for nested `Describe` and `Sub` too.
 
 
 ![](Screenshots/s1.png)
@@ -119,7 +119,7 @@ For example the below test will generate `test_math_should_work` and `test_math_
 import XCTest
 import Spek
 
-class GenerateTestCaseTests: SpekTestCase {
+class GenerateTestCaseTests: SpekTestCaseSync {
     override class func describe() -> Describe {
         Describe("math") {
             It("should work") {
