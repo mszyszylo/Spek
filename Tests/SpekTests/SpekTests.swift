@@ -4,39 +4,92 @@ import XCTest
 @available(iOS 15.0, *)
 final class SpekTests: XCTestCase {
     func testExample() async {
-        var left = 0
-        var right = 0
+        var orderedInvocations = [Int]()
+        let addNext = {
+            guard let last = orderedInvocations.last else {
+                orderedInvocations.append(.zero)
+                return
+            }
+            orderedInvocations.append(last + 1)
+        }
         await spec {
-            DescribeAsync("math") {
+            var afterAllCalled = false
+            var beforeAllCalled = false
+            BeforeAllAsync {
+                beforeAllCalled = true
+                XCTAssertEqual(afterAllCalled, false)
+                addNext()
+            }
+            AfterAllAsync {
+                XCTAssertEqual(beforeAllCalled, true)
+                afterAllCalled = true
+                addNext()
+            }
+            DescribeAsync("") {
+                var afterEachCalled = false
+                var beforeEachCalled = false
+                ItAsync("") {
+                    XCTAssertEqual(beforeEachCalled, true)
+                    XCTAssertEqual(afterEachCalled, false)
+                    XCTAssertEqual(beforeAllCalled, true)
+                    XCTAssertEqual(afterAllCalled, false)
+                    addNext()
+                }
                 BeforeEachAsync {
-                    left = 2
+                    beforeEachCalled = true
+                    XCTAssertEqual(beforeAllCalled, true)
+                    XCTAssertEqual(afterAllCalled, false)
+                    addNext()
                 }
 
-                DescribeAsync("basic") {
+                DescribeAsync("") {
+                    let innerDescribeCalled = false
                     BeforeEachAsync {
-                        right = 3
+                        addNext()
+                        XCTAssertEqual(afterEachCalled, true)
+                        XCTAssertEqual(beforeAllCalled, true)
+                        XCTAssertEqual(afterAllCalled, false)
+                        XCTAssertEqual(innerDescribeCalled, false)
                     }
 
                     AfterEachAsync {
-
+                        addNext()
+                        XCTAssertEqual(beforeAllCalled, true)
+                        XCTAssertEqual(afterAllCalled, false)
+                        XCTAssertEqual(innerDescribeCalled, false)
                     }
 
                     SubAsync {
-                        let another = 4
-                        return DescribeAsync("3 operands") {
-                            ItAsync("adds with another") {
-                                XCTAssertEqual(left + right + another, 9)
+                        DescribeAsync("") {
+                            ItAsync("") {
+                                addNext()
+                                XCTAssertEqual(beforeAllCalled, true)
+                                XCTAssertEqual(afterAllCalled, false)
+                                XCTAssertEqual(orderedInvocations.count, 11)
                             }
                         }
                     }
 
-                    ItAsync("adds correctly") {
-                        XCTAssertEqual(left + right, 5)
+                    ItAsync("") {
+                        addNext()
+                        XCTAssertEqual(beforeAllCalled, true)
+                        XCTAssertEqual(afterAllCalled, false)
+                        XCTAssertEqual(innerDescribeCalled, false)
                     }
 
-                    ItAsync("multiplies correctly") {
-                        XCTAssertEqual(left * right, 6)
+                    ItAsync("") {
+                        addNext()
+                        XCTAssertEqual(beforeAllCalled, true)
+                        XCTAssertEqual(afterAllCalled, false)
+                        XCTAssertEqual(innerDescribeCalled, false)
                     }
+                }
+                AfterEachAsync {
+                    addNext()
+                    afterEachCalled = true
+                    XCTAssertEqual(beforeAllCalled, true)
+                    XCTAssertEqual(afterAllCalled, false)
+                    XCTAssertEqual(orderedInvocations.count, 4)
                 }
             }
         }
